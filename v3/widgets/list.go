@@ -48,11 +48,13 @@ func (self *List) Draw(buf *Buffer) {
 		if self.WrapText {
 			cells = WrapCells(cells, uint(self.Inner.Dx()))
 		}
+		if row == self.SelectedRow {
+			cells = append(RunesToStyledCells([]rune{'*'}, StyleClear), cells...)
+		} else {
+			cells = append(RunesToStyledCells([]rune{' '}, StyleClear), cells...)
+		}
 		for j := 0; j < len(cells) && point.Y < self.Inner.Max.Y; j++ {
 			style := cells[j].Style
-			if row == self.SelectedRow {
-				style = self.SelectedRowStyle
-			}
 			if cells[j].Rune == '\n' {
 				point = image.Pt(self.Inner.Min.X, point.Y+1)
 			} else {
